@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mura illustration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Caveat:wght@400;700&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    /*
+      ★ ぼくたちのゴシック２を使う手順 ★
+      1. https://fontfree.me/1199 からレギュラーをダウンロード
+      2. このHTMLファイルと同じフォルダに「boku2_R.ttf」を置く
+      3. 下の @font-face のコメントを外す
+      4. --font-main の値を 'BokuGothic' に変える
+    */
+    /*
+    @font-face {
+      font-family: 'BokuGothic';
+      src: url('boku2_R.ttf') format('truetype');
+    }
+    */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #FFF8FD;
+      --cream-dark:  #FCF0F8;
+      --pink:        #F5C4DC;
+      --pink-mid:    #E8A0C0;
+      --lavender:    #D0B8E8;
+      --lavender-mid:#B898D8;
+      --purple:      #9070B0;
+      --purple-dark: #604880;
+      --blush:       #FAD8EC;
+      --text:        #5C3D6A;
+      --text-light:  #A888B8;
+      --font-main:   'M PLUS Rounded 1c', sans-serif;
+      --font-en:     'Caveat', cursive;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--cream);
+      color: var(--text);
+      font-weight: 400;
+      line-height: 1.8;
+      overflow-x: hidden;
+      cursor: none;
+      /* subtle horizontal line texture like notebook paper */
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 31px,
+        rgba(208, 184, 232, 0.15) 31px,
+        rgba(208, 184, 232, 0.15) 32px
+      );
+    }
+
+    /* ===== CUSTOM CURSOR ===== */
+    .cursor {
+      position: fixed;
+      width: 14px; height: 14px;
+      background: var(--pink-mid);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s;
+      mix-blend-mode: multiply;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 38px; height: 38px;
+      border: 2px solid var(--lavender-mid);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      opacity: 0.7;
+    }
+    @media (max-width: 768px) { .cursor, .cursor-ring { display: none; } body { cursor: auto; } }
+
+    /* ===== SCALLOP TOP BORDER ===== */
+    .scallop-top {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 600;
+      height: 72px;
+      overflow: hidden;
+    }
+    .scallop-top svg {
+      display: block; width: 100%; height: 100%;
+      filter: drop-shadow(0px 6px 10px rgba(160, 110, 190, 0.7));
+    }
+
+    /* ===== NAV ===== */
+    nav {
+      position: fixed;
+      top: 70px; left: 0; right: 0;
+      z-index: 500;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 0.8rem 3rem;
+      background: rgba(255, 248, 253, 0.88);
+      backdrop-filter: blur(10px);
+      border-bottom: 1.5px solid rgba(245, 196, 220, 0.4);
+    }
+
+    .nav-logo {
+      font-family: var(--font-en);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--purple);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-en);
+      font-size: 1.4rem;
+      color: var(--text-light);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 2px;
+      background: var(--pink-mid);
+      border-radius: 2px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .nav-links a:hover { color: var(--purple); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    @media (max-width: 768px) {
+      nav { padding: 0.8rem 1.5rem; top: 46px; }
+      .nav-links { display: none; }
+    }
+
+    /* ===== HERO ===== */
+    #hero {
+      min-height: 100vh;
+      padding-top: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Floating deco circles */
+    .hero-deco-circle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hdc1 { width: 380px; height: 380px; background: rgba(245, 196, 220, 0.18); top: 5%; left: -80px; animation: floatA 10s ease-in-out infinite; }
+    .hdc2 { width: 280px; height: 280px; background: rgba(208, 184, 232, 0.18); top: 10%; right: -60px; animation: floatB 12s ease-in-out infinite; }
+    .hdc3 { width: 180px; height: 180px; background: rgba(250, 216, 236, 0.25); bottom: 15%; left: 8%; animation: floatA 9s ease-in-out infinite 1s; }
+
+    @keyframes floatA {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50%       { transform: translateY(-20px) rotate(3deg); }
+    }
+    @keyframes floatB {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-26px) rotate(-2deg); }
+    }
+
+    /* Main illustration slideshow */
+    .hero-illust {
+      width: 92%;
+      max-width: 860px;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, rgba(245,196,220,0.35) 0%, rgba(208,184,232,0.35) 50%, rgba(250,216,236,0.35) 100%);
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 1s ease both;
+      box-shadow: 0 8px 40px rgba(144, 112, 176, 0.12);
+      margin-bottom: 2.5rem;
+    }
+
+    /* Slideshow slides */
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .slide.active { opacity: 1; }
+    .slide img { width: 100%; height: 100%; object-fit: contain; border-radius: 24px; }
+
+    /* Arrow buttons */
+    .slide-arrow {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(255,255,255,0.75);
+      border: none;
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      font-size: 1.1rem;
+      color: var(--purple);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.25s, transform 0.2s;
+      box-shadow: 0 2px 10px rgba(144,112,176,0.2);
+    }
+    .slide-arrow:hover { background: white; transform: translateY(-50%) scale(1.1); }
+    .slide-arrow.prev { left: 12px; }
+    .slide-arrow.next { right: 12px; }
+
+    /* Dots */
+    .slide-dots {
+      position: absolute;
+      bottom: 14px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 7px;
+      z-index: 10;
+    }
+    .slide-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      border: none;
+    }
+    .slide-dot.active { background: white; transform: scale(1.3); }
+
+    .hero-illust-placeholder {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 0.88rem;
+      letter-spacing: 0.1em;
+      padding: 2rem;
+    }
+
+    /* Floating mini shapes around hero */
+    .mini-float {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .mf1 { width: 44px; height: 44px; background: var(--pink); top: -14px; left: 12%; opacity: 0.7; animation: floatA 6s ease-in-out infinite; }
+    .mf2 { width: 28px; height: 28px; background: var(--lavender); top: -10px; right: 18%; opacity: 0.6; animation: floatB 7s ease-in-out infinite 0.5s; }
+    .mf3 { width: 20px; height: 20px; background: var(--blush); bottom: -8px; left: 30%; opacity: 0.6; animation: floatA 8s ease-in-out infinite 1s; }
+    .mf4 { width: 36px; height: 36px; background: var(--lavender-mid); bottom: -12px; right: 25%; opacity: 0.5; animation: floatB 9s ease-in-out infinite 0.3s; }
+
+    /* Hero text block */
+    .hero-text {
+      text-align: center;
+      padding: 0 2rem 4rem;
+      animation: fadeUp 1s ease 0.3s both;
+    }
+    .hero-welcome {
+      font-size: 0.88rem;
+      color: var(--text-light);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.6rem;
+    }
+    .hero-catchphrase {
+      font-family: var(--font-main);
+      font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .hero-catchphrase em {
+      font-style: normal;
+      color: var(--purple);
+    }
+    .hero-sub {
+      font-size: 0.92rem;
+      color: var(--text-light);
+      line-height: 2;
+      margin-bottom: 2rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 2.2rem;
+      background: linear-gradient(135deg, var(--pink-mid), var(--lavender-mid));
+      color: white;
+      text-decoration: none;
+      font-family: var(--font-main);
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      border-radius: 50px;
+      box-shadow: 0 4px 18px rgba(144, 112, 176, 0.3);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 26px rgba(144, 112, 176, 0.4); }
+    .btn-outline {
+      background: white;
+      color: var(--purple);
+      border: 2px solid var(--lavender-mid);
+      box-shadow: none;
+    }
+    .btn-outline:hover { background: var(--cream-dark); box-shadow: none; }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute;
+      bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-en);
+      font-size: 0.82rem;
+      letter-spacing: 0.2em;
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      animation: bounce 2.5s ease-in-out infinite;
+    }
+    .scroll-hint::after { content: ''; display: block; width: 1px; height: 32px; background: linear-gradient(to bottom, var(--pink-mid), transparent); }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ===== ARCH SECTION DIVIDER ===== */
+    .arch-divider {
+      width: 100%;
+      line-height: 0;
+      overflow: hidden;
+    }
+    .arch-divider svg { display: block; width: 100%; }
+
+    /* ===== SECTIONS COMMON ===== */
+    section { padding: 6rem 6vw; position: relative; }
+
+    .section-header { text-align: center; margin-bottom: 3.5rem; }
+    .section-en {
+      font-family: var(--font-en);
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--purple);
+      display: block;
+      line-height: 1;
+    }
+    .section-ja {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      letter-spacing: 0.15em;
+      margin-top: 0.2rem;
+      display: block;
+    }
+    .section-deco {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+      color: var(--pink-mid);
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+    }
+    .section-deco::before, .section-deco::after {
+      content: '';
+      display: block;
+      width: 40px; height: 1.5px;
+      background: linear-gradient(to right, transparent, var(--pink-mid));
+    }
+    .section-deco::after { background: linear-gradient(to left, transparent, var(--pink-mid)); }
+
+    /* ===== ABOUT ===== */
+    #about { background: var(--cream-dark); }
+
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .about-img-wrap { position: relative; }
+    .about-img-frame {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: linear-gradient(150deg, rgba(245,196,220,0.5), rgba(208,184,232,0.5));
+      border-radius: 60% 40% 65% 35% / 45% 55% 40% 60%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      animation: morphBlob 12s ease-in-out infinite;
+      overflow: hidden;
+    }
+    @keyframes morphBlob {
+      0%, 100% { border-radius: 60% 40% 65% 35% / 45% 55% 40% 60%; }
+      50%       { border-radius: 40% 60% 35% 65% / 60% 40% 55% 45%; }
+    }
+    .about-img-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+    .about-ring {
+      position: absolute;
+      width: 90px; height: 90px;
+      border: 2px dashed rgba(208, 184, 232, 0.6);
+      border-radius: 50%;
+      bottom: -20px; right: -20px;
+      animation: spin 20s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .about-text .section-header { text-align: left; }
+    .about-text .section-deco { justify-content: flex-start; }
+    .about-text .section-deco::after { display: none; }
+
+    .about-body {
+      font-size: 0.93rem;
+      line-height: 2.1;
+      color: var(--text);
+      margin-top: 1.4rem;
+    }
+    .about-body p + p { margin-top: 0.8em; }
+
+    .about-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.6rem;
+    }
+    .tag {
+      font-size: 0.78rem;
+      padding: 0.35rem 1rem;
+      background: white;
+      border: 1.5px solid var(--lavender);
+      color: var(--purple);
+      border-radius: 20px;
+      transition: background 0.25s, color 0.25s;
+    }
+    .tag:hover { background: var(--lavender); color: white; }
+
+    @media (max-width: 768px) {
+      .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-img-wrap { max-width: 240px; margin: 0 auto; }
+    }
+
+    /* ===== PORTFOLIO ===== */
+    #portfolio { }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.4rem;
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+
+    .portfolio-item {
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      cursor: none;
+    }
+    .portfolio-item:nth-child(3n+2) { margin-top: 1.8rem; }
+    .portfolio-item:hover { transform: translateY(-8px) rotate(-0.4deg); box-shadow: 0 18px 46px rgba(144, 112, 176, 0.18); }
+
+    .portfolio-placeholder {
+      width: 100%;
+      aspect-ratio: 4/5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      transition: transform 0.45s ease;
+    }
+    .portfolio-item:hover .portfolio-placeholder { transform: scale(1.06); }
+    .portfolio-item:nth-child(1) .portfolio-placeholder { background: linear-gradient(145deg, #F5D8EA, #E0B8D4); }
+    .portfolio-item:nth-child(2) .portfolio-placeholder { background: linear-gradient(145deg, #DDD0F0, #C4B0E4); }
+    .portfolio-item:nth-child(3) .portfolio-placeholder { background: linear-gradient(145deg, #F8C8E0, #EAA8CC); }
+    .portfolio-item:nth-child(4) .portfolio-placeholder { background: linear-gradient(145deg, #C8B8E8, #B0A0D8); }
+    .portfolio-item:nth-child(5) .portfolio-placeholder { background: linear-gradient(145deg, #F0D0E8, #DEB8D8); }
+    .portfolio-item:nth-child(6) .portfolio-placeholder { background: linear-gradient(145deg, #D8C8F4, #C0B0EC); }
+
+    .portfolio-overlay {
+      position: absolute; inset: 0;
+      background: rgba(96, 72, 128, 0);
+      display: flex; align-items: flex-end;
+      padding: 1.2rem;
+      transition: background 0.35s;
+      border-radius: 20px;
+    }
+    .portfolio-item:hover .portfolio-overlay { background: rgba(96, 72, 128, 0.35); }
+    .portfolio-caption {
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .portfolio-item:hover .portfolio-caption { opacity: 1; transform: none; }
+
+    .portfolio-badge {
+      position: absolute;
+      top: 12px; right: 12px;
+      background: linear-gradient(135deg, var(--pink-mid), var(--lavender-mid));
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.25rem 0.7rem;
+      border-radius: 20px;
+      letter-spacing: 0.06em;
+      box-shadow: 0 2px 8px rgba(144,112,176,0.3);
+    }
+
+    .portfolio-more { text-align: center; margin-top: 2.8rem; }
+
+    /* ===== ICON MODAL ===== */
+    .icon-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(90, 60, 120, 0.55);
+      backdrop-filter: blur(6px);
+      z-index: 900;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-modal-overlay.open { display: flex; }
+    .icon-modal {
+      background: var(--cream);
+      border-radius: 24px;
+      padding: 2.5rem 2rem 2rem;
+      max-width: 680px;
+      width: 92vw;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(96,72,128,0.3);
+      position: relative;
+      animation: fadeUp 0.35s ease;
+    }
+    .icon-modal-title {
+      text-align: center;
+      font-family: var(--font-en);
+      font-size: 1.4rem;
+      color: var(--purple);
+      margin-bottom: 0.3rem;
+    }
+    .icon-modal-sub {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-light);
+      margin-bottom: 1.8rem;
+    }
+    .icon-modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+    }
+    .icon-modal-item {
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--blush);
+      aspect-ratio: 1/1;
+    }
+    .icon-modal-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .icon-modal-close {
+      position: absolute;
+      top: 1rem; right: 1.2rem;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: var(--text-light);
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.2rem 0.5rem;
+      transition: color 0.2s;
+    }
+    .icon-modal-close:hover { color: var(--purple); }
+
+    /* ===== BOOKS ===== */
+    #books { background: var(--cream-dark); }
+
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 2rem;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .book-card {
+      background: white;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(144, 112, 176, 0.08);
+      transition: transform 0.32s ease, box-shadow 0.32s ease;
+    }
+    .book-card:hover { transform: translateY(-8px) rotate(0.5deg); box-shadow: 0 16px 40px rgba(144, 112, 176, 0.16); }
+
+    .book-cover-placeholder {
+      width: 100%;
+      aspect-ratio: 3/4;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; color: var(--text-light);
+    }
+    .book-card:nth-child(1) .book-cover-placeholder { background: linear-gradient(155deg, #F5D0E8, #D8B4CC); }
+    .book-card:nth-child(2) .book-cover-placeholder { background: linear-gradient(155deg, #D8C8F0, #BCA8E0); }
+
+    .book-info { padding: 1.2rem 1.4rem 1.6rem; }
+    .book-debut {
+      display: inline-block;
+      font-family: var(--font-en);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: white;
+      background: linear-gradient(135deg, #F0A0C0, #C898D8);
+      padding: 0.2rem 0.75rem;
+      border-radius: 20px;
+      margin-bottom: 0.5rem;
+    }
+    .book-credit { font-size: 0.72rem; color: var(--lavender-mid); letter-spacing: 0.08em; margin-bottom: 0.3rem; font-weight: 700; }
+    .book-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; line-height: 1.5; }
+    .book-series { font-size: 0.75rem; color: var(--text-light); margin-bottom: 0.5rem; letter-spacing: 0.04em; white-space: nowrap; }
+    .book-desc { font-size: 0.82rem; color: var(--text-light); line-height: 1.8; margin-bottom: 1.1rem; }
+
+    .btn-amazon {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: linear-gradient(135deg, var(--pink-mid), var(--lavender-mid));
+      color: white;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 0.55rem 1.3rem;
+      border-radius: 50px;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .btn-amazon:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(144, 112, 176, 0.3); }
+
+    /* ===== COMMISSION ===== */
+    /* ===== NEWS ===== */
+    #news { background: var(--cream); }
+
+    .news-list {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .news-item {
+      display: grid;
+      grid-template-columns: 110px 80px 1fr;
+      align-items: start;
+      gap: 1rem;
+      padding: 1.4rem 0;
+      border-bottom: 1px solid rgba(208,184,232,0.35);
+    }
+    .news-item:last-child { border-bottom: none; }
+    .news-date {
+      font-family: var(--font-en);
+      font-size: 0.88rem;
+      color: var(--text-light);
+      padding-top: 0.1rem;
+      white-space: nowrap;
+    }
+    .news-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: 0.04em;
+    }
+    .news-tag.event {
+      background: linear-gradient(135deg, var(--lavender), var(--lavender-mid));
+      color: white;
+    }
+    .news-tag.report {
+      background: linear-gradient(135deg, var(--pink), var(--pink-mid));
+      color: white;
+    }
+    .news-tag.info {
+      background: linear-gradient(135deg, #B8E0D4, #90C8B8);
+      color: white;
+    }
+    .news-title {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .news-title a {
+      color: var(--purple);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--lavender);
+      transition: color 0.2s;
+    }
+    .news-title a:hover { color: var(--purple-dark); }
+
+    @media (max-width: 600px) {
+      .news-item {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        gap: 0.4rem 0.8rem;
+      }
+      .news-title { grid-column: 1 / -1; }
+    }
+
+    #commission {
+      background: linear-gradient(135deg, #C8A8E0 0%, #E8A8C8 100%);
+      text-align: center;
+      overflow: hidden;
+    }
+    #commission .section-en { color: white; text-shadow: 0 2px 12px rgba(144,112,176,0.3); }
+    #commission .section-ja { color: rgba(255,255,255,0.75); }
+    #commission .section-deco { color: rgba(255,255,255,0.7); }
+    #commission .section-deco::before, #commission .section-deco::after {
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.5));
+    }
+
+    .commission-deco-circle {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      pointer-events: none;
+    }
+    .cdc1 { width: 320px; height: 320px; top: -80px; left: -60px; animation: floatA 10s ease-in-out infinite; }
+    .cdc2 { width: 200px; height: 200px; bottom: -50px; right: -40px; animation: floatB 8s ease-in-out infinite 1s; }
+
+    .commission-body {
+      font-size: 0.95rem;
+      line-height: 2.2;
+      color: rgba(255,255,255,0.88);
+      max-width: 520px;
+      margin: 1.8rem auto;
+      position: relative;
+    }
+    .commission-types {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin: 1.8rem 0 2.6rem;
+      position: relative;
+    }
+    .commission-types .tag {
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.5);
+      color: white;
+    }
+    .commission-types .tag:hover { background: rgba(255,255,255,0.45); }
+
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-en);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      position: relative;
+      text-shadow: 0 2px 12px rgba(144,112,176,0.3);
+      transition: opacity 0.3s;
+    }
+    .contact-email::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0; right: 0;
+      height: 2px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 2px;
+      transform: scaleX(0.5);
+      transform-origin: left;
+      transition: transform 0.4s;
+    }
+    .contact-email:hover::after { transform: scaleX(1); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--purple-dark);
+      padding: 2.2rem 6vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo { font-family: var(--font-en); font-size: 1.4rem; font-weight: 700; color: rgba(245,196,220,0.9); }
+    .footer-sns { display: flex; gap: 1.5rem; }
+    .footer-sns a { color: rgba(208,184,232,0.6); text-decoration: none; font-size: 0.82rem; letter-spacing: 0.06em; transition: color 0.3s; display: flex; align-items: center; gap: 0.4rem; }
+    .footer-sns a:hover { color: var(--pink); }
+    .nav-ig {
+      display: flex;
+      align-items: center;
+      color: var(--text-light);
+      transition: color 0.3s;
+      text-decoration: none;
+      margin-left: 0.5rem;
+    }
+    .nav-ig:hover { color: var(--purple); }
+    .footer-copy { font-size: 0.72rem; color: rgba(208,184,232,0.4); }
+
+    /* ===== FLOATING MASCOT ===== */
+    .mascot {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      width: 192px; height: 192px;
+      background: white;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(144,112,176,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      animation: floatA 5s ease-in-out infinite;
+      cursor: pointer;
+      z-index: 400;
+      transition: transform 0.2s;
+      text-decoration: none;
+    }
+    .mascot:hover { transform: scale(1.15); }
+
+    /* ===== REVEAL ANIMATIONS ===== */
+    .reveal       { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-left  { opacity: 0; transform: translateX(-36px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-right { opacity: 0; transform: translateX(36px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-scale { opacity: 0; transform: scale(0.9); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible, .reveal-left.visible, .reveal-right.visible, .reveal-scale.visible { opacity: 1; transform: none; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(26px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 768px) {
+      section { padding: 5rem 5vw; }
+      footer { flex-direction: column; text-align: center; }
+      .hero-illust { aspect-ratio: 4/3; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CUSTOM CURSOR -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- SCALLOP TOP BORDER -->
+  <div class="scallop-top">
+    <svg viewBox="0 0 1440 48" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <!-- 薄めのパステル：opacity 0.6 -->
+      <circle cx="20"   cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="60"   cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="100"  cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+      <circle cx="140"  cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="180"  cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="220"  cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+      <circle cx="260"  cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="300"  cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="340"  cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+      <circle cx="380"  cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="420"  cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="460"  cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+      <circle cx="500"  cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="540"  cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="580"  cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+      <circle cx="620"  cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="660"  cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="700"  cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+      <circle cx="740"  cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="780"  cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="820"  cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+      <circle cx="860"  cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="900"  cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="940"  cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+      <circle cx="980"  cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="1020" cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="1060" cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+      <circle cx="1100" cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="1140" cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="1180" cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+      <circle cx="1220" cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="1260" cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="1300" cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+      <circle cx="1340" cy="6" r="22" fill="rgba(245,196,220,0.6)"/>
+      <circle cx="1380" cy="6" r="22" fill="rgba(208,184,232,0.6)"/>
+      <circle cx="1420" cy="6" r="22" fill="rgba(250,216,236,0.6)"/>
+    </svg>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#hero">
+      <img src="logo-icon.png" class="nav-logo-icon" alt="mura logo"
+           onerror="this.style.display='none';" />
+      mura
+    </a>
+    <div style="display:flex;align-items:center;gap:1.5rem;margin-left:auto;">
+      <ul class="nav-links">
+        <li><a href="#about">about</a></li>
+        <li><a href="#news">news</a></li>
+        <li><a href="#portfolio">works</a></li>
+        <li><a href="#books">books</a></li>
+        <li><a href="#commission">contact</a></li>
+      </ul>
+      <a href="https://www.instagram.com/mura_illustrator/" target="_blank" class="nav-ig" title="Instagram">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4.5"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero">
+    <div class="hero-deco-circle hdc1"></div>
+    <div class="hero-deco-circle hdc2"></div>
+    <div class="hero-deco-circle hdc3"></div>
+
+    <div class="hero-illust reveal" id="heroSlider">
+      <!--
+        ★ スライドショーの画像を追加する方法 ★
+        1. 画像ファイルを hero1.png, hero2.png, hero3.png … と名前をつける
+        2. このHTMLと同じフォルダに入れる
+        3. 以下の <img src="hero1.png"> の部分のファイル名を合わせる
+        4. 増やしたい場合は <div class="slide">...</div> ブロックをコピーして追加
+      -->
+
+      <!-- スライド 1 -->
+      <div class="slide active">
+        <img src="hero1.png" alt="illustration 1" onerror="this.closest('.slide').style.background='linear-gradient(135deg,rgba(245,196,220,0.4),rgba(208,184,232,0.4))';this.style.display='none';" />
+      </div>
+      <!-- スライド 2 -->
+      <div class="slide">
+        <img src="hero2.png" alt="illustration 2" onerror="this.closest('.slide').style.background='linear-gradient(135deg,rgba(208,184,232,0.4),rgba(250,216,236,0.4))';this.style.display='none';" />
+      </div>
+      <!-- スライド 3 -->
+      <div class="slide">
+        <img src="hero3.png" alt="illustration 3" onerror="this.closest('.slide').style.background='linear-gradient(135deg,rgba(250,216,236,0.4),rgba(245,196,220,0.4))';this.style.display='none';" />
+      </div>
+      <!-- スライド 4（必要なければ削除してOK） -->
+      <div class="slide">
+        <img src="hero4.png" alt="illustration 4" onerror="this.closest('.slide').style.background='linear-gradient(135deg,rgba(208,184,232,0.4),rgba(245,196,220,0.4))';this.style.display='none';" />
+      </div>
+
+      <!-- 左右矢印 -->
+      <button class="slide-arrow prev" onclick="changeSlide(-1)">‹</button>
+      <button class="slide-arrow next" onclick="changeSlide(1)">›</button>
+
+      <!-- ドットナビ -->
+      <div class="slide-dots" id="slideDots"></div>
+
+      <!-- 浮かぶ飾り -->
+      <div class="mini-float mf1"></div>
+      <div class="mini-float mf2"></div>
+      <div class="mini-float mf3"></div>
+      <div class="mini-float mf4"></div>
+    </div>
+
+    <div class="hero-text">
+      <p class="hero-welcome">イラストレーター mura のポートフォリオサイトへ　ようこそ！</p>
+      <h1 class="hero-catchphrase">
+        やさしい色と線で、<em>あなたの世界</em>に物語を
+      </h1>
+      <p class="hero-sub">
+        絵本のような温かさを大切に、<br>
+        書籍・広告・グッズなどのイラストを制作しています。
+      </p>
+      <div class="hero-btns">
+        <a href="#commission" class="btn">お仕事のご依頼</a>
+        <a href="#portfolio" class="btn btn-outline">作品を見る</a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">scroll</div>
+  </section>
+
+  <!-- ARCH DIVIDER -->
+  <div class="arch-divider">
+    <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,80 L0,0 Q720,80 1440,0 L1440,80 Z" fill="#FCF0F8"/>
+    </svg>
+  </div>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about">
+    <div class="section-header reveal">
+      <span class="section-en">About</span>
+      <span class="section-ja">mura について</span>
+      <div class="section-deco">✦</div>
+    </div>
+    <div class="about-inner">
+      <div class="about-img-wrap reveal-left">
+        <div class="about-img-frame">
+          <!-- <img src="profile.jpg" alt="mura profile" /> -->
+          <span style="font-size:0.8rem;color:var(--text-light);">プロフィール写真<br>またはイラスト</span>
+        </div>
+        <div class="about-ring"></div>
+      </div>
+      <div class="about-text reveal-right">
+        <div class="section-header">
+          <span class="section-en">Hello !</span>
+          <span class="section-ja">はじめまして</span>
+          <div class="section-deco">✦</div>
+        </div>
+        <div class="about-body">
+          <p>
+            はじめまして、muraです。<br>
+            ナチュラルで温かみのあるタッチを大切に、<br>
+            人や動物、自然をモチーフにしたイラストを描いています。
+          </p>
+          <p>
+            子どもから大人まで手に取ってもらえるような、<br>
+            やさしい世界観の作品づくりを心がけています。
+          </p>
+        </div>
+        <div class="about-tags">
+          <span class="tag">絵本イラスト</span>
+          <span class="tag">書籍装画</span>
+          <span class="tag">キャラクターデザイン</span>
+          <span class="tag">グッズデザイン</span>
+          <span class="tag">広告・雑誌</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCH DIVIDER -->
+  <div class="arch-divider" style="background:#FCF0F8;">
+    <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,0 Q720,80 1440,0 L1440,80 L0,80 Z" fill="#FFF8FD"/>
+    </svg>
+  </div>
+
+  <!-- ===== NEWS ===== -->
+  <section id="news">
+    <div class="section-header reveal">
+      <span class="section-en">News</span>
+      <span class="section-ja">活動報告・お知らせ</span>
+      <div class="section-deco">✦</div>
+    </div>
+
+    <div class="news-list">
+
+      <!--
+        ★ ニュースの追加方法 ★
+        下の <div class="news-item reveal"> をコピーして、
+        日付・タグ・内容を書き換えてください。
+        タグは「event（イベント）」「report（活動報告）」「info（お知らせ）」の3種類です。
+      -->
+
+      <div class="news-item reveal">
+        <span class="news-date">2026.05.23</span>
+        <span class="news-tag event">イベント</span>
+        <p class="news-title"><a href="https://designfesta.com/about/#step2" target="_blank" rel="noopener">デザインフェスタ</a>に初出店します！5/23のみ参加。ブースNo. B-369 にてお待ちしています✦</p>
+      </div>
+
+      <div class="news-item reveal">
+        <span class="news-date">2026.03.29</span>
+        <span class="news-tag report">活動報告</span>
+        <p class="news-title">熊谷わくわくマルシェにて絵本販売を行いました。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ARCH DIVIDER -->
+  <div class="arch-divider" style="background:#FFF8FD;">
+    <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,80 L0,0 Q720,80 1440,0 L1440,80 Z" fill="#FCF0F8"/>
+    </svg>
+  </div>
+
+  <!-- ===== PORTFOLIO ===== -->
+  <section id="portfolio">
+    <div class="section-header reveal">
+      <span class="section-en">Works</span>
+      <span class="section-ja">作品一覧</span>
+      <div class="section-deco">✦</div>
+    </div>
+    <div class="portfolio-grid">
+      <div class="portfolio-item reveal-scale" style="cursor:pointer;" onclick="document.getElementById('iconModal').classList.add('open')">
+        <img src="icon1.png" alt="アイコンイラスト"
+             class="portfolio-placeholder" style="object-fit:cover;"
+             onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#F5D8EA,#E0B8D4);\'></div>';" />
+        <div class="portfolio-overlay"><p class="portfolio-caption">アイコン実績を見る ✦</p></div>
+        <div class="portfolio-badge">アイコン</div>
+      </div>
+      <div class="portfolio-item reveal-scale">
+        <div class="portfolio-placeholder">作品 02</div>
+        <div class="portfolio-overlay"><p class="portfolio-caption">作品タイトル</p></div>
+      </div>
+      <div class="portfolio-item reveal-scale">
+        <div class="portfolio-placeholder">作品 03</div>
+        <div class="portfolio-overlay"><p class="portfolio-caption">作品タイトル</p></div>
+      </div>
+      <div class="portfolio-item reveal-scale">
+        <div class="portfolio-placeholder">作品 04</div>
+        <div class="portfolio-overlay"><p class="portfolio-caption">作品タイトル</p></div>
+      </div>
+      <div class="portfolio-item reveal-scale">
+        <div class="portfolio-placeholder">作品 05</div>
+        <div class="portfolio-overlay"><p class="portfolio-caption">作品タイトル</p></div>
+      </div>
+      <div class="portfolio-item reveal-scale">
+        <div class="portfolio-placeholder">作品 06</div>
+        <div class="portfolio-overlay"><p class="portfolio-caption">作品タイトル</p></div>
+      </div>
+
+      <!-- 絵本作品 -->
+      <div class="portfolio-item reveal-scale">
+        <img src="book1.jpg" alt="ゆうちゃんとねこちゃんのなかなおり"
+             class="portfolio-placeholder"
+             style="object-fit:cover;"
+             onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#F0D0E8,#DDB8D4);\'></div>';" />
+        <div class="portfolio-overlay">
+          <p class="portfolio-caption">絵本「ゆうちゃんとねこちゃんのなかなおり」</p>
+        </div>
+        <div class="portfolio-badge">絵本</div>
+      </div>
+      <div class="portfolio-item reveal-scale">
+        <img src="book3.jpg" alt="ほんとうのわたしをみつけたよ"
+             class="portfolio-placeholder"
+             style="object-fit:cover;"
+             onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#D8C4F0,#C0A8E4);\'></div>';" />
+        <div class="portfolio-overlay">
+          <p class="portfolio-caption">絵本「ほんとうのわたしをみつけたよ」</p>
+        </div>
+        <div class="portfolio-badge">絵本</div>
+      </div>
+    </div>
+    <div class="portfolio-more reveal">
+    </div>
+  </section>
+
+  <!-- ICON MODAL -->
+  <div class="icon-modal-overlay" id="iconModal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="icon-modal">
+      <button class="icon-modal-close" onclick="document.getElementById('iconModal').classList.remove('open')">✕</button>
+      <p class="icon-modal-title">Icon Works</p>
+      <p class="icon-modal-sub">その他のアイコンイラスト実績</p>
+      <div class="icon-modal-grid">
+        <div class="icon-modal-item">
+          <img src="icon2.png" alt="アイコン実績2"
+               onerror="this.style.display='none';" />
+        </div>
+        <div class="icon-modal-item">
+          <img src="icon3.png" alt="アイコン実績3"
+               onerror="this.style.display='none';" />
+        </div>
+        <div class="icon-modal-item">
+          <img src="icon4.png" alt="アイコン実績4"
+               onerror="this.style.display='none';" />
+        </div>
+        <div class="icon-modal-item">
+          <img src="icon5.png" alt="アイコン実績5"
+               onerror="this.style.display='none';" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCH DIVIDER -->
+  <div class="arch-divider">
+    <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,80 L0,0 Q720,80 1440,0 L1440,80 Z" fill="#FCF0F8"/>
+    </svg>
+  </div>
+
+  <!-- ===== BOOKS ===== -->
+  <section id="books">
+    <div class="section-header reveal">
+      <span class="section-en">Books</span>
+      <span class="section-ja">絵本・書籍</span>
+      <div class="section-deco">✦</div>
+    </div>
+    <div class="books-grid">
+
+      <!-- 絵本 2（デビュー作・先頭） -->
+      <div class="book-card reveal-scale">
+        <div class="book-cover-placeholder">
+          <img src="book2.jpg" alt="ゆうちゃんとおばあちゃんのおたんじょうびかい" style="width:100%;height:100%;object-fit:cover;"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <span style="display:none;align-items:center;justify-content:center;width:100%;height:100%;">表紙画像</span>
+        </div>
+        <div class="book-info">
+          <div class="book-debut">debut</div>
+          <p class="book-credit">絵本ラボ｜イラストレーター2名で担当</p>
+          <p class="book-title">ゆうちゃんとおばあちゃんのおたんじょうびかい</p>
+          <p class="book-series">ゆうちゃんのこころをそだてる絵本シリーズ 1</p>
+          <p class="book-desc">苦手も得意もあっていい。みんなで力を合わせて、大好きなおばあちゃんのためにお誕生日会を開くあたたかな物語。</p>
+          <a href="https://amzn.asia/d/0gJhVZ3T" target="_blank" class="btn-amazon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            Amazonで購入
+          </a>
+        </div>
+      </div>
+
+      <!-- 絵本 1 -->
+      <div class="book-card reveal-scale">
+        <div class="book-cover-placeholder">
+          <img src="book1.jpg" alt="ゆうちゃんとねこちゃんのなかなおり" style="width:100%;height:100%;object-fit:cover;"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <span style="display:none;align-items:center;justify-content:center;width:100%;height:100%;">表紙画像</span>
+        </div>
+        <div class="book-info">
+          <p class="book-credit">絵本ラボ｜イラスト全担当</p>
+          <p class="book-title">ゆうちゃんとねこちゃんのなかなおり</p>
+          <p class="book-series">ゆうちゃんのこころをそだてる絵本シリーズ 2</p>
+          <p class="book-desc">けんかしちゃったら、どうすればいいの？友情と思いやりをやさしく育てる、ゆうちゃんとねこちゃんのあたたかな仲直りのお話。</p>
+          <a href="https://amzn.asia/d/07VFY3Z3" target="_blank" class="btn-amazon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            Amazonで購入
+          </a>
+        </div>
+      </div>
+
+      <!-- 絵本 3 -->
+      <div class="book-card reveal-scale">
+        <div class="book-cover-placeholder">
+          <img src="book3.jpg" alt="ほんとうのわたしをみつけたよ" style="width:100%;height:100%;object-fit:cover;"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <span style="display:none;align-items:center;justify-content:center;width:100%;height:100%;">表紙画像</span>
+        </div>
+        <div class="book-info">
+          <p class="book-credit">絵本ラボ｜イラスト全担当</p>
+          <p class="book-title">ほんとうのわたしをみつけたよ</p>
+          <p class="book-series">Shy to Shine</p>
+          <p class="book-desc">人と話すのがちょっぴり苦手だった女の子が、英語と出会って少しずつ変わっていく。ほんの少しの勇気が、未来を動かしていく物語。</p>
+          <a href="https://amzn.asia/d/004cMDV9" target="_blank" class="btn-amazon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            Amazonで購入
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ARCH DIVIDER -->
+  <div class="arch-divider" style="background:#FCF0F8;">
+    <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,0 Q720,80 1440,0 L1440,80 L0,80 Z" fill="#C8A8E0"/>
+    </svg>
+  </div>
+
+  <!-- ===== COMMISSION ===== -->
+  <section id="commission">
+    <div class="commission-deco-circle cdc1"></div>
+    <div class="commission-deco-circle cdc2"></div>
+    <div class="section-header reveal">
+      <span class="section-en">Contact</span>
+      <span class="section-ja">お仕事のご依頼</span>
+      <div class="section-deco">✦</div>
+    </div>
+    <p class="commission-body reveal">
+      書籍・絵本・広告・グッズデザインなど、<br>
+      イラストに関するお仕事のご依頼を承っております。<br>
+      まずはお気軽にメールにてお問い合わせください。
+    </p>
+    <div class="commission-types reveal">
+      <span class="tag">絵本・書籍装画</span>
+      <span class="tag">広告・雑誌</span>
+      <span class="tag">キャラクターデザイン</span>
+      <span class="tag">パッケージ・グッズ</span>
+      <span class="tag">Web・SNS用イラスト</span>
+    </div>
+    <div class="reveal">
+      <!-- ★ メールアドレスをここに差し替えてください ★ -->
+      <a href="mailto:mura.azuki@gmail.com" class="contact-email">
+        ✉ mura.azuki@gmail.com
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">✿ mura illustration</div>
+    <div class="footer-sns">
+      <a href="https://www.instagram.com/mura_illustrator/" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4.5"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+        Instagram
+      </a>
+    </div>
+    <p class="footer-copy">© 2026 mura. All rights reserved.</p>
+  </footer>
+
+  <!-- FLOATING MASCOT -->
+  <!-- ★ mascot.png をこのHTMLと同じフォルダに入れると自動で表示されます ★ -->
+  <a href="#hero" class="mascot" title="トップへ戻る">
+    <img src="mascot.png" alt="mascot" style="width:100%;height:100%;object-fit:contain;border-radius:50%;transform:scale(1.15) translateY(-6%);"
+         onerror="this.style.display='none';this.parentElement.innerHTML='✿';" />
+  </a>
+
+  <script>
+    // ===== SLIDESHOW =====
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.getElementById('slideDots');
+    let current = 0;
+    let timer;
+
+    // ドット生成
+    slides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', `スライド ${i + 1}`);
+      dot.addEventListener('click', () => goToSlide(i));
+      dotsContainer.appendChild(dot);
+    });
+
+    function goToSlide(n) {
+      slides[current].classList.remove('active');
+      dotsContainer.children[current].classList.remove('active');
+      current = (n + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      dotsContainer.children[current].classList.add('active');
+      resetTimer();
+    }
+
+    function changeSlide(dir) { goToSlide(current + dir); }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => goToSlide(current + 1), 4000);
+    }
+    resetTimer();
+
+    // ===== CUSTOM CURSOR =====
+    const cursor     = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursor.style.left = mouseX + 'px';
+      cursor.style.top  = mouseY + 'px';
+    });
+    (function animRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      cursorRing.style.left = ringX + 'px';
+      cursorRing.style.top  = ringY + 'px';
+      requestAnimationFrame(animRing);
+    })();
+
+    document.querySelectorAll('a, button, .portfolio-item, .book-card, .tag, .mascot').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '22px'; cursor.style.height = '22px';
+        cursorRing.style.width = '56px'; cursorRing.style.height = '56px';
+        cursorRing.style.opacity = '0.35';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '14px'; cursor.style.height = '14px';
+        cursorRing.style.width = '38px'; cursorRing.style.height = '38px';
+        cursorRing.style.opacity = '0.7';
+      });
+    });
+
+    // ===== MOUSE PARALLAX ON HERO =====
+    const heroIllust = document.querySelector('.hero-illust');
+    document.addEventListener('mousemove', e => {
+      const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+      const dx = (e.clientX - cx) / cx, dy = (e.clientY - cy) / cy;
+      if (heroIllust) heroIllust.style.transform = `translate(${dx * 8}px, ${dy * 8}px)`;
+      document.querySelectorAll('.hero-deco-circle').forEach((el, i) => {
+        const s = [12, -8, 10][i] || 10;
+        el.style.transform = `translate(${dx * s}px, ${dy * s}px)`;
+      });
+    });
+
+    // ===== SCROLL PARALLAX =====
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      document.querySelectorAll('.hero-deco-circle').forEach((el, i) => {
+        const speed = [0.06, 0.1, 0.07][i] || 0.08;
+        el.style.marginTop = (y * speed) + 'px';
+      });
+    });
+
+    // ===== SCROLL REVEAL =====
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 90);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
