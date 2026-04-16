@@ -163,7 +163,7 @@
     /* ===== HERO ===== */
     #hero {
       min-height: 100vh;
-      padding-top: 90px;
+      padding-top: 160px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -192,30 +192,45 @@
 
     /* Main illustration slideshow */
     .hero-illust {
-      width: 92%;
-      max-width: 860px;
-      aspect-ratio: 16/9;
+      width: 68vmin;
+      max-width: 600px;
+      min-width: 260px;
+      aspect-ratio: 1/1;
       background: linear-gradient(135deg, rgba(245,196,220,0.35) 0%, rgba(208,184,232,0.35) 50%, rgba(250,216,236,0.35) 100%);
-      border-radius: 24px;
+      border-radius: 50%;
       position: relative;
       overflow: hidden;
-      animation: fadeUp 1s ease both;
-      box-shadow: 0 8px 40px rgba(144, 112, 176, 0.12);
+      animation: fadeUp 1s ease both, slideFloat 9s ease-in-out infinite 1s;
+      z-index: 550;
+      box-shadow: 0 8px 40px rgba(144, 112, 176, 0.18);
       margin-bottom: 2.5rem;
     }
 
     /* Slideshow slides */
+    @keyframes slideFloat {
+      0%   { transform: translate(0px, 0px) rotate(0deg); }
+      25%  { transform: translate(14px, -18px) rotate(2deg); }
+      50%  { transform: translate(0px, -30px) rotate(0deg); }
+      75%  { transform: translate(-14px, -16px) rotate(-2deg); }
+      100% { transform: translate(0px, 0px) rotate(0deg); }
+    }
     .slide {
       position: absolute;
       inset: 0;
-      opacity: 0;
-      transition: opacity 1s ease;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: #ffffff;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 2.4s ease;
+      pointer-events: none;
     }
-    .slide.active { opacity: 1; }
-    .slide img { width: 100%; height: 100%; object-fit: contain; border-radius: 24px; }
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .slide img { width: 100%; height: 100%; object-fit: cover; }
 
     /* Arrow buttons */
     .slide-arrow {
@@ -839,9 +854,16 @@
     .footer-copy { font-size: 0.72rem; color: rgba(208,184,232,0.4); }
 
     /* ===== FLOATING MASCOT ===== */
-    .mascot {
+    .mascot-wrap {
       position: fixed;
       bottom: 2rem; right: 2rem;
+      z-index: 400;
+      animation: floatA 5s ease-in-out infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .mascot {
       width: 192px; height: 192px;
       background: white;
       border-radius: 50%;
@@ -849,13 +871,30 @@
       box-shadow: 0 4px 20px rgba(144,112,176,0.25);
       display: flex; align-items: center; justify-content: center;
       font-size: 1.8rem;
-      animation: floatA 5s ease-in-out infinite;
       cursor: pointer;
-      z-index: 400;
       transition: transform 0.2s;
       text-decoration: none;
     }
     .mascot:hover { transform: scale(1.15); }
+    .mascot-wrap:hover .mascot { transform: scale(1.15); }
+    .mascot-tooltip {
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%) translateY(8px) scale(0.85);
+      color: var(--text-light);
+      font-family: var(--font-en);
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .mascot-wrap:hover .mascot-tooltip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
 
     /* ===== REVEAL ANIMATIONS ===== */
     .reveal       { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
@@ -877,6 +916,9 @@
   </style>
 </head>
 <body>
+
+  <!-- SOAP BUBBLE CANVAS -->
+  <canvas id="bubbleCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
 
   <!-- CUSTOM CURSOR -->
   <div class="cursor" id="cursor"></div>
@@ -958,8 +1000,7 @@
 
     <div class="hero-illust reveal" id="heroSlider">
       <!--
-        ★ スライドショーの画像を追加する方法 ★
-        1. 画像ファイルを hero1.png, hero2.png, hero3.png … と名前をつける
+        ★ スライド3の放像を耉虚する方法 ★
         2. このHTMLと同じフォルダに入れる
         3. 以下の <img src="hero1.png"> の部分のファイル名を合わせる
         4. 増やしたい場合は <div class="slide">...</div> ブロックをコピーして追加
@@ -970,6 +1011,9 @@
         <img src="hero1.png" alt="illustration 1" onerror="this.closest('.slide').style.background='linear-gradient(135deg,rgba(245,196,220,0.4),rgba(208,184,232,0.4))';this.style.display='none';" />
       </div>
       <!-- スライド 2 -->
+ rgba(208,184,232,0.4))';this.style.display='none';" />
+      </div>
+      <!-- スライド 2 -->
       <div class="slide">
         <img src="hero2.png" alt="illustration 2" onerror="this.closest('.slide').style.background='linear-gradient(135deg,rgba(208,184,232,0.4),rgba(250,216,236,0.4))';this.style.display='none';" />
       </div>
@@ -977,7 +1021,7 @@
       <div class="slide">
         <img src="hero3.png" alt="illustration 3" onerror="this.closest('.slide').style.background='linear-gradient(135deg,rgba(250,216,236,0.4),rgba(245,196,220,0.4))';this.style.display='none';" />
       </div>
-      <!-- スライド 4（必要なければ削除してOK） -->
+      <!-- スライド 4（必要なければ削除してOJ） -->
       <div class="slide">
         <img src="hero4.png" alt="illustration 4" onerror="this.closest('.slide').style.background='linear-gradient(135deg,rgba(208,184,232,0.4),rgba(245,196,220,0.4))';this.style.display='none';" />
       </div>
@@ -996,8 +1040,8 @@
       <div class="mini-float mf4"></div>
     </div>
 
+
     <div class="hero-text">
-      <p class="hero-welcome">イラストレーター mura のポートフォリオサイトへ　ようこそ！</p>
       <h1 class="hero-catchphrase">
         やさしい色と線で、<em>あなたの世界</em>に物語を
       </h1>
@@ -1031,8 +1075,7 @@
     <div class="about-inner">
       <div class="about-img-wrap reveal-left">
         <div class="about-img-frame">
-          <!-- <img src="profile.jpg" alt="mura profile" /> -->
-          <span style="font-size:0.8rem;color:var(--text-light);">プロフィール写真<br>またはイラスト</span>
+          <img src="profile2.png" alt="mura profile" />
         </div>
         <div class="about-ring"></div>
       </div>
@@ -1046,7 +1089,7 @@
           <p>
             はじめまして、muraです。<br>
             ナチュラルで温かみのあるタッチを大切に、<br>
-            人や動物、自然をモチーフにしたイラストを描いています。
+            人や動物、自然をモチープにしたイラストを描いています。
           </p>
           <p>
             子どもから大人まで手に取ってもらえるような、<br>
@@ -1126,24 +1169,29 @@
         <div class="portfolio-badge">アイコン</div>
       </div>
       <div class="portfolio-item reveal-scale">
-        <div class="portfolio-placeholder">作品 02</div>
-        <div class="portfolio-overlay"><p class="portfolio-caption">作品タイトル</p></div>
+        <img src="work02.png" alt="イラスト作品" class="portfolio-placeholder" style="object-fit:cover;"
+             onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#DDD0F0,#C4B0E4);\'></div>';" />
+        <div class="portfolio-overlay"><p class="portfolio-caption">イラスト</p></div>
       </div>
       <div class="portfolio-item reveal-scale">
-        <div class="portfolio-placeholder">作品 03</div>
-        <div class="portfolio-overlay"><p class="portfolio-caption">作品タイトル</p></div>
+        <img src="work03.png" alt="イラスト作品" class="portfolio-placeholder" style="object-fit:cover;"
+             onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#F8C8E0,#EAA8CC);\'></div>';" />
+        <div class="portfolio-overlay"><p class="portfolio-caption">イラスト</p></div>
       </div>
       <div class="portfolio-item reveal-scale">
-        <div class="portfolio-placeholder">作品 04</div>
-        <div class="portfolio-overlay"><p class="portfolio-caption">作品タイトル</p></div>
+        <img src="work04.png" alt="イラスト作品" class="portfolio-placeholder" style="object-fit:cover;"
+             onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#C8B8E8,#B0A0D8);\'></div>';" />
+        <div class="portfolio-overlay"><p class="portfolio-caption">イラスト</p></div>
       </div>
       <div class="portfolio-item reveal-scale">
-        <div class="portfolio-placeholder">作品 05</div>
-        <div class="portfolio-overlay"><p class="portfolio-caption">作品タイトル</p></div>
+        <img src="work05.png" alt="イラスト作品" class="portfolio-placeholder" style="object-fit:cover;"
+             onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#F0D0E8,#DEB8D8);\'></div>';" />
+        <div class="portfolio-overlay"><p class="portfolio-caption">イラスト</p></div>
       </div>
       <div class="portfolio-item reveal-scale">
-        <div class="portfolio-placeholder">作品 06</div>
-        <div class="portfolio-overlay"><p class="portfolio-caption">作品タイトル</p></div>
+        <img src="work06.png" alt="イラスト作品" class="portfolio-placeholder" style="object-fit:cover;"
+             onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#D8C8F4,#C0B0EC);\'></div>';" />
+        <div class="portfolio-overlay"><p class="portfolio-caption">イラスト</p></div>
       </div>
 
       <!-- 絵本作品 -->
@@ -1227,7 +1275,7 @@
           <p class="book-credit">絵本ラボ｜イラストレーター2名で担当</p>
           <p class="book-title">ゆうちゃんとおばあちゃんのおたんじょうびかい</p>
           <p class="book-series">ゆうちゃんのこころをそだてる絵本シリーズ 1</p>
-          <p class="book-desc">苦手も得意もあっていい。みんなで力を合わせて、大好きなおばあちゃんのためにお誕生日会を開くあたたかな物語。</p>
+          <p class="book-desc">苦手も得意もあっていい。みんなで力を合わせて、大好きなおばあちゃんのためにえ誕生日会を開くあたたかな物語。</p>
           <a href="https://amzn.asia/d/0gJhVZ3T" target="_blank" class="btn-amazon">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             Amazonで購入
@@ -1246,7 +1294,7 @@
           <p class="book-credit">絵本ラボ｜イラスト全担当</p>
           <p class="book-title">ゆうちゃんとねこちゃんのなかなおり</p>
           <p class="book-series">ゆうちゃんのこころをそだてる絵本シリーズ 2</p>
-          <p class="book-desc">けんかしちゃったら、どうすればいいの？友情と思いやりをやさしく育てる、ゆうちゃんとねこちゃんのあたたかな仲直りのお話。</p>
+          <p class="book-desc">けんかしちゃったら、どうすればいいは？友情と思いやりをやさしく育てる、ゆうちゃんとねこちゃんのあたたかな仲直りのお話。</p>
           <a href="https://amzn.asia/d/07VFY3Z3" target="_blank" class="btn-amazon">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             Amazonで購入
@@ -1330,10 +1378,13 @@
 
   <!-- FLOATING MASCOT -->
   <!-- ★ mascot.png をこのHTMLと同じフォルダに入れると自動で表示されます ★ -->
-  <a href="#hero" class="mascot" title="トップへ戻る">
-    <img src="mascot.png" alt="mascot" style="width:100%;height:100%;object-fit:contain;border-radius:50%;transform:scale(1.15) translateY(-6%);"
-         onerror="this.style.display='none';this.parentElement.innerHTML='✿';" />
-  </a>
+  <div class="mascot-wrap">
+    <span class="mascot-tooltip">back to top</span>
+    <a href="#hero" class="mascot" title="トップへ戻る">
+      <img src="mascot.png" alt="mascot" style="width:100%;height:100%;object-fit:contain;border-radius:50%;transform:scale(1.15) translateY(-6%);"
+           onerror="this.style.display='none';this.parentElement.innerHTML='✿';" />
+    </a>
+  </div>
 
   <script>
     // ===== SLIDESHOW =====
@@ -1341,6 +1392,9 @@
     const dotsContainer = document.getElementById('slideDots');
     let current = 0;
     let timer;
+
+    // 最初のスライドを表示
+    slides[0].classList.add('active');
 
     // ドット生成
     slides.forEach((_, i) => {
@@ -1352,11 +1406,20 @@
     });
 
     function goToSlide(n) {
-      slides[current].classList.remove('active');
-      dotsContainer.children[current].classList.remove('active');
+      const prev = current;
       current = (n + slides.length) % slides.length;
-      slides[current].classList.add('active');
-      dotsContainer.children[current].classList.add('active');
+      if (prev === current) return;
+
+      // まず今のスライドをフェードアウト
+      slides[prev].classList.remove('active');
+      dotsContainer.children[prev].classList.remove('active');
+
+      // フェードアウト完了後に次をフェードイン
+      setTimeout(() => {
+        slides[current].classList.add('active');
+        dotsContainer.children[current].classList.add('active');
+      }, 1400);
+
       resetTimer();
     }
 
@@ -1386,7 +1449,7 @@
       requestAnimationFrame(animRing);
     })();
 
-    document.querySelectorAll('a, button, .portfolio-item, .book-card, .tag, .mascot').forEach(el => {
+    document.querySelectorAll('a, button, .portfolio-item, .book-card, .tag, .mascot-wrap').forEach(el => {
       el.addEventListener('mouseenter', () => {
         cursor.style.width = '22px'; cursor.style.height = '22px';
         cursorRing.style.width = '56px'; cursorRing.style.height = '56px';
@@ -1430,6 +1493,92 @@
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => obs.observe(el));
+
+    // ===== SOAP BUBBLES =====
+    (function() {
+      const canvas = document.getElementById('bubbleCanvas');
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const BUBBLE_COUNT = 11;
+      const COLORS = [
+        [245, 196, 220],   // pink
+        [208, 184, 232],   // lavender
+        [250, 216, 236],   // blush
+        [255, 248, 253],   // cream-white
+        [176, 152, 216],   // lavender-mid
+      ];
+
+      function randomBubble(fromBottom) {
+        const r = 10 + Math.random() * 22;
+        return {
+          x:    Math.random() * window.innerWidth,
+          y:    fromBottom ? window.innerHeight + r + Math.random() * 200
+                           : Math.random() * window.innerHeight,
+          r:    r,
+          vy:   0.25 + Math.random() * 0.45,     // rise speed
+          vx:   (Math.random() - 0.5) * 0.4,     // gentle drift
+          phase:Math.random() * Math.PI * 2,     // sway offset
+          swayAmp: 0.3 + Math.random() * 0.5,
+          swayFreq: 0.008 + Math.random() * 0.006,
+          opacity: 0,
+          fadeIn: true,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        };
+      }
+
+      const bubbles = Array.from({ length: BUBBLE_COUNT }, () => randomBubble(false));
+
+      function drawBubble(b) {
+        const [r, g, bl] = b.color;
+        const alpha = b.opacity;
+
+        // シンプルな塗りつぶし円（背景と同トーン）
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${bl},${alpha * 0.28})`;
+        ctx.fill();
+      }
+
+      let frame = 0;
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        frame++;
+
+        bubbles.forEach(b => {
+          // sway
+          b.x += b.vx + Math.sin(frame * b.swayFreq + b.phase) * b.swayAmp;
+          b.y -= b.vy;
+
+          // fade in
+          if (b.fadeIn) {
+            b.opacity = Math.min(b.opacity + 0.012, 0.72);
+            if (b.opacity >= 0.72) b.fadeIn = false;
+          }
+
+          // fade out near top
+          if (b.y < window.innerHeight * 0.15) {
+            b.opacity = Math.max(b.opacity - 0.018, 0);
+          }
+
+          // reset when gone
+          if (b.y < -b.r * 2 || b.opacity <= 0) {
+            Object.assign(b, randomBubble(true));
+          }
+
+          drawBubble(b);
+        });
+
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
   </script>
 </body>
 </html>
