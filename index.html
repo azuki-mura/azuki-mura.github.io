@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3ZE0559NNJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-3ZE0559NNJ');
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mura illustration</title>
@@ -844,7 +852,7 @@
     .footer-sns a:hover { color: var(--pink); }
     .nav-ig {
       display: flex;
-align-items: center;
+      align-items: center;
       color: var(--text-light);
       transition: color 0.3s;
       text-decoration: none;
@@ -912,7 +920,7 @@ align-items: center;
       section { padding: 5rem 5vw; }
       footer { flex-direction: column; text-align: center; }
 
-      /* ① マスコット：スマホでは少し小さく */
+      /* ① マスコット：スマせでは少し小さく */
       .mascot { width: 120px; height: 120px; font-size: 1.3rem; }
 
       /* ② Works：2列グリッド */
@@ -1022,19 +1030,20 @@ align-items: center;
 
     <div class="hero-illust reveal" id="heroSlider">
       <!--
-        ★ スライドショーの画像を追加する方法 ★
-        1. 画像ファイルを hero1.png, hero2.png, hero3.png … と名前をつける
-        2. このHTMLと同じフォルダに入れる
-        3. 以下の <img src="hero1.png"> の部分の
-      <img src="hero1.png" alt="illustration 1" onerror="this.closest('.slide').style.background='linear-gradient(135deg,rgba(245,196,220,0.4),rgba(208,184,232,0.4))';this.style.display='none';" />
+        ) スライドショーの画像を苿加する㦦妦の ★
+        1. 画像ファイルを hero1.png, hero2.png, hero3.png … と名隘をつける
+        2. このパフォルダに入れる
+        3. 以下の <img src="hero1.png"> の部分のファイル名を合わせる
+        4. 増やしたい場合は <div class="slide">...</div> ブロックをコピーして追加
+      -->
+
+      <!-- スライド 1 -->
+      <div class="slide active">
+        <img src="hero1.png" alt="illustration 1" onerror="this.closest('.slide').style.background='linear-gradient(135deg,rgba(245,196,220,0.4),rgba(208,184,232,0.4))';this.style.display='none';" />
       </div>
       <!-- スライド 2 -->
       <div class="slide">
         <img src="hero2.png" alt="illustration 2" onerror="this.closest('.slide').style.background='linear-gradient(135deg,rgba(208,184,232,0.4),rgba(250,216,236,0.4))';this.style.display='none';" />
-      </div>
-      <!-- スライド 3 -->
-      <div class="slide">
-        <img src="hero3.png" alt="ilsground='linear-gradient(135deg,rgba(208,184,232,0.4),rgba(250,216,236,0.4))';this.style.display='none';" />
       </div>
       <!-- スライド 3 -->
       <div class="slide">
@@ -1053,7 +1062,7 @@ align-items: center;
       <div class="slide-dots" id="slideDots"></div>
 
       <!-- 浮かぶ飾り -->
-      <div class="mini-float mf1"></div>
+      <div class="mini-fl="mini-float mf1"></div>
       <div class="mini-float mf2"></div>
       <div class="mini-float mf3"></div>
       <div class="mini-float mf4"></div>
@@ -1101,17 +1110,17 @@ align-items: center;
       <div class="about-text reveal-right">
         <div class="section-header">
           <span class="section-en">Hello !</span>
-          <span class="section-ja">はじめまして</span>
+          <span class="section-ja">はす。まして</span>
           <div class="section-deco">✦</div>
         </div>
         <div class="about-body">
           <p>
-            はじめまして、muraです。<br>
+            はじろまして、muraです。<br>
             ナチュラルで温かみのあるタッチを大切に、<br>
             人や動物、自然をモチーフにしたイラストを描いています。
           </p>
           <p>
-            子どもから大人まで手に取ってもらえるような、<br>
+            子どもから大人まで手に取ってもらいるような、<br>
             やさしい世界観の作品づくりを心がけています。
           </p>
         </div>
@@ -1184,7 +1193,7 @@ align-items: center;
         <img src="icon1.png" alt="アイコンイラスト"
              class="portfolio-placeholder" style="object-fit:cover;"
              onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#F5D8EA,#E0B8D4);\'></div>';" />
-        <div class="portfolio-overlay"><p class="portfolio-caption">アイコン実績を見る ✦</p></div>
+        <div class="portfolio-overlay"><p class="portfolio-caption">アイコン実績を誋る ✦</p></div>
         <div class="portfolio-badge">アイコン</div>
       </div>
       <div class="portfolio-item reveal-scale">
@@ -1215,12 +1224,12 @@ align-items: center;
 
       <!-- 絵本作品 -->
       <div class="portfolio-item reveal-scale">
-        <img src="book1.jpg" alt="ゆうちゃんとねこちゃんのなかなおり"
+        <img src="book1.jpg" alt="ゆうちゃんとキこちゃんのなかなおり"
              class="portfolio-placeholder"
              style="object-fit:cover;"
              onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#F0D0E8,#DDB8D4);\'></div>';" />
         <div class="portfolio-overlay">
-          <p class="portfolio-caption">絵本「ゆうちゃんとねこちゃんのなかなおり」</p>
+          <p class="portfolio-caption">絵本「ゆうちゃんとキこちゃんのなかなおり」</p>
         </div>
         <div class="portfolio-badge">絵本</div>
       </div>
@@ -1350,7 +1359,7 @@ align-items: center;
     </svg>
   </div>
 
-  <!-- ===== COMMISSION ===== -->
+  <!-- ===== COMmISSION ===== -->
   <section id="commission">
     <div class="commission-deco-circle cdc1"></div>
     <div class="commission-deco-circle cdc2"></div>
@@ -1361,7 +1370,7 @@ align-items: center;
     </div>
     <p class="commission-body reveal">
       書籍・絵本・広告・グッズデザインなど、<br>
-      イラストに関するお仕事のご依頼を承っております。<br>
+      イラストに関するお仕事のご依頼を承っておりまそ。<br>
       まずはお気軽にメールにてお問い合わせください。
     </p>
     <div class="commission-types reveal">
@@ -1429,7 +1438,7 @@ align-items: center;
       current = (n + slides.length) % slides.length;
       if (prev === current) return;
 
-      // みず今のスライドをフェードアウト
+      // まず今のスライドをフェードアウト
       slides[prev].classList.remove('active');
       dotsContainer.children[prev].classList.remove('active');
 
@@ -1498,7 +1507,7 @@ align-items: center;
       const y = window.scrollY;
       document.querySelectorAll('.hero-deco-circle').forEach((el, i) => {
         const speed = [0.06, 0.1, 0.07][i] || 0.08;
-        el.style.marginTop = (y * speed) + 'px';
+        el.style.marginTop = (Y * speed) + 'px';
       });
     });
 
@@ -1525,7 +1534,7 @@ align-items: center;
       resize();
       window.addEventListener('resize', resize);
 
-      const BUBBLE_COUNT = 11;
+      const BUBBLE_COUNT = window.innerWidth <= 768 ? 4 : 11;
       const COLORS = [
         [245, 196, 220],   // pink
         [208, 184, 232],   // lavender
