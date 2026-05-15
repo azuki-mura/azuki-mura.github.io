@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Redirecting... | mura illustration</title>
+<script>
+// Instagramなどで#がURLエンコードされた場合にトップへリダイレクト
+var path = decodeURIComponent(window.location.pathname);
+var search = window.location.search;
+// %23hero → /#hero 、その他はトップへ
+var dest = '/';
+if (path.indexOf('hero') !== -1 || window.location.pathname.indexOf('%23') !== -1) {
+  dest = '/' + (search || '') + '#hero';
+} else {
+  dest = '/' + (search || '');
+}
+window.location.replace(dest);
+</script>
+</head>
+<body>
+<p>Redirecting...</p>
+</body>
+</html>
