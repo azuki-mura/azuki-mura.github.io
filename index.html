@@ -757,6 +757,14 @@
       transition: color 0.2s;
     }
     .news-title a:hover { color: var(--purple-dark); }
+    .news-img {
+      grid-column: 1 / -1;
+      width: 100%;
+      max-height: 420px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-top: 0.3rem;
+    }
 
     @media (max-width: 600px) {
       .news-item {
@@ -920,7 +928,7 @@
       section { padding: 5rem 5vw; }
       footer { flex-direction: column; text-align: center; }
 
-      /* ① マスコット：スマせでは少し小さく */
+      /* ① マスコット：スマホでは少し小さく */
       .mascot { width: 120px; height: 120px; font-size: 1.3rem; }
 
       /* ② Works：2列グリッド */
@@ -1030,9 +1038,9 @@
 
     <div class="hero-illust reveal" id="heroSlider">
       <!--
-        ) スライドショーの画像を苿加する㦦妦の ★
-        1. 画像ファイルを hero1.png, hero2.png, hero3.png … と名隘をつける
-        2. このパフォルダに入れる
+        ★ スライドショーの画像を追加する方法 ★
+        1. 画像ファイルを hero1.png, hero2.png, hero3.png … と名前をつける
+        2. このHTMLと同じフォルダに入れる
         3. 以下の <img src="hero1.png"> の部分のファイル名を合わせる
         4. 増やしたい場合は <div class="slide">...</div> ブロックをコピーして追加
       -->
@@ -1062,7 +1070,7 @@
       <div class="slide-dots" id="slideDots"></div>
 
       <!-- 浮かぶ飾り -->
-      <div class="mini-fl="mini-float mf1"></div>
+      <div class="mini-float mf1"></div>
       <div class="mini-float mf2"></div>
       <div class="mini-float mf3"></div>
       <div class="mini-float mf4"></div>
@@ -1120,7 +1128,7 @@
             人や動物、自然をモチーフにしたイラストを描いています。
           </p>
           <p>
-            子どもから大人まで手に取ってもらいるような、<br>
+            子どもから大人まで手に取ってもらえるような、<br>
             やさしい世界観の作品づくりを心がけています。
           </p>
         </div>
@@ -1161,6 +1169,12 @@
 
       <div class="news-item reveal">
         <span class="news-date">2026.05.23</span>
+        <span class="news-tag report">活動報告</span>
+        <p class="news-title">デザインフェスタ vol.63 に初出展しました！絵本・ポストカード・フレークシールをご覧いただき、たくさんの方にお声がけいただきました。ありがとうございました✦</p>
+        <img src="desafes.jpg" alt="デザインフェスタ ブースの様子" class="news-img" loading="lazy" />
+      </div>
+      <div class="news-item reveal">
+        <span class="news-date">2026.05.23</span>
         <span class="news-tag event">イベント</span>
         <p class="news-title"><a href="https://designfesta.com/about/#step2" target="_blank" rel="noopener">デザインフェスタ</a>に初出店します！5/23のみ参加。ブースNo. B-369 にてお待ちしています✦</p>
       </div>
@@ -1193,7 +1207,7 @@
         <img src="icon1.png" alt="アイコンイラスト"
              class="portfolio-placeholder" style="object-fit:cover;"
              onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#F5D8EA,#E0B8D4);\'></div>';" />
-        <div class="portfolio-overlay"><p class="portfolio-caption">アイコン実績を誋る ✦</p></div>
+        <div class="portfolio-overlay"><p class="portfolio-caption">アイコン実績を見る ✦</p></div>
         <div class="portfolio-badge">アイコン</div>
       </div>
       <div class="portfolio-item reveal-scale">
@@ -1224,12 +1238,12 @@
 
       <!-- 絵本作品 -->
       <div class="portfolio-item reveal-scale">
-        <img src="book1.jpg" alt="ゆうちゃんとキこちゃんのなかなおり"
+        <img src="book1.jpg" alt="ゆうちゃんとねこちゃんのなかなおり"
              class="portfolio-placeholder"
              style="object-fit:cover;"
              onerror="this.outerHTML='<div class=\'portfolio-placeholder\' style=\'background:linear-gradient(145deg,#F0D0E8,#DDB8D4);\'></div>';" />
         <div class="portfolio-overlay">
-          <p class="portfolio-caption">絵本「ゆうちゃんとキこちゃんのなかなおり」</p>
+          <p class="portfolio-caption">絵本「ゆうちゃんとねこちゃんのなかなおり」</p>
         </div>
         <div class="portfolio-badge">絵本</div>
       </div>
@@ -1304,7 +1318,7 @@
           <p class="book-title">ゆうちゃんとおばあちゃんのおたんじょうびかい</p>
           <p class="book-series">ゆうちゃんのこころをそだてる絵本シリーズ 1</p>
           <p class="book-desc">苦手も得意もあっていい。みんなで力を合わせて、大好きなおばあちゃんのためにお誕生日会を開くあたたかな物語。</p>
-          <a href="https://amzn.asia/d/07VFY3Z3" target="_blank" class="btn-amazon">
+          <a href="https://amzn.asia/d/0gJhVZ3T" target="_blank" class="btn-amazon">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             Amazonで購入
           </a>
@@ -1323,7 +1337,7 @@
           <p class="book-title">ゆうちゃんとねこちゃんのなかなおり</p>
           <p class="book-series">ゆうちゃんのこころをそだてる絵本シリーズ 2</p>
           <p class="book-desc">けんかしちゃったら、どうすればいいの？友情と思いやりをやさしく育てる、ゆうちゃんとねこちゃんのあたたかな仲直りのお話。</p>
-          <a href="https://amzn.asia/d/0gJhVZ3T" target="_blank" class="btn-amazon">
+          <a href="https://amzn.asia/d/07VFY3Z3" target="_blank" class="btn-amazon">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             Amazonで購入
           </a>
@@ -1359,7 +1373,7 @@
     </svg>
   </div>
 
-  <!-- ===== COMmISSION ===== -->
+  <!-- ===== COMMISSION ===== -->
   <section id="commission">
     <div class="commission-deco-circle cdc1"></div>
     <div class="commission-deco-circle cdc2"></div>
@@ -1370,7 +1384,7 @@
     </div>
     <p class="commission-body reveal">
       書籍・絵本・広告・グッズデザインなど、<br>
-      イラストに関するお仕事のご依頼を承っておりまそ。<br>
+      イラストに関するお仕事のご依頼を承っております。<br>
       まずはお気軽にメールにてお問い合わせください。
     </p>
     <div class="commission-types reveal">
@@ -1507,7 +1521,7 @@
       const y = window.scrollY;
       document.querySelectorAll('.hero-deco-circle').forEach((el, i) => {
         const speed = [0.06, 0.1, 0.07][i] || 0.08;
-        el.style.marginTop = (Y * speed) + 'px';
+        el.style.marginTop = (y * speed) + 'px';
       });
     });
 
